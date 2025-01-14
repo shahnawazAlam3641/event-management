@@ -12,8 +12,11 @@ const Home = () => {
           Seamless Events, Unforgettable Experiences
         </p>
       </div>
-      <div onClick={() => navigate("/register")} className="flex gap-2 ">
-        <button className="py-1 px-2 border-2 text-white w-fit border-[#E54065] bg-[#E54065]  hover:text-black rounded-md hover:bg-white transition-colors duration-200">
+      <div className="flex gap-2 ">
+        <button
+          onClick={() => navigate("/register")}
+          className="py-1 px-2 border-2 text-white w-fit border-[#E54065] bg-[#E54065]  hover:text-black rounded-md hover:bg-white transition-colors duration-200"
+        >
           Sign In
         </button>
         <button
