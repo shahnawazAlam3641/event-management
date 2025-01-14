@@ -17,7 +17,6 @@ function App() {
           path="/"
           element={
             <UnauthenticatedRoute>
-              {" "}
               <Home />
             </UnauthenticatedRoute>
           }

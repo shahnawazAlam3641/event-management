@@ -107,7 +107,7 @@ const Register = () => {
             className="cursor-pointer absolute right-[5%] top-1/2 -translate-y-[50%]"
             onClick={() => setShowPassword(!showPassword)}
           >
-            show
+            <p className="text-gray-400"> {!showPassword ? "Show" : "Hide"} </p>
           </div>
         </div>
         <p
