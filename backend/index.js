@@ -1,12 +1,14 @@
-import express from "express";
-import { createServer } from "http";
-import { Server } from "socket.io";
-import cors from "cors";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import authRoutes from "./routes/auth.js";
-import eventRoutes from "./routes/events.js";
-import { setupSocketHandlers } from "./socket/handlers.js";
+const express = require("express");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const authRoutes = require("./src/routes/auth");
+const eventRoutes = require("./src/routes/events.js");
+const setupSocketHandlers = require("./src/socket/handlers.js");
+const { cloudinaryConnect } = require("./src/config/cloudinary.js");
+const fileUpload = require("express-fileupload");
 
 dotenv.config();
 
@@ -28,6 +30,15 @@ app.use(
 );
 
 app.use(express.json());
+
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
+
+cloudinaryConnect();
 
 // Routes
 app.use("/api/v1/auth", authRoutes);

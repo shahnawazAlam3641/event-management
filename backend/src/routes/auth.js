@@ -1,9 +1,9 @@
-import express from "express";
-import jwt from "jsonwebtoken";
-import User from "../models/User.js";
-import { auth } from "../middlewares/auth.js";
-import bcrypt from "bcryptjs";
-import { z } from "zod";
+const express = require("express");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User.js");
+const auth = require("../middlewares/auth.js");
+const bcrypt = require("bcrypt");
+const { z } = require("zod");
 
 const router = express.Router();
 
@@ -13,8 +13,6 @@ router.post("/register", async (req, res) => {
       email: z.string().email().min(5).max(100),
       password: z.string().min(8).max(100),
       fullName: z.string().min(3).max(50),
-      avatarUrl: z.string(),
-      username: z.string(),
     });
 
     const isparsedDataSuccess = requestBodySchema.safeParse(req.body);
@@ -28,9 +26,9 @@ router.post("/register", async (req, res) => {
       return;
     }
 
-    const { username, email, password, fullName, avatarUrl } = req.body;
+    const { email, password, fullName } = req.body;
 
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -38,10 +36,8 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new User({
-      username,
       email,
       password: hashedPassword,
-      avatarUrl: avatarUrl || "",
       fullName,
     });
 
@@ -50,7 +46,6 @@ router.post("/register", async (req, res) => {
     const token = jwt.sign(
       {
         id: user._id,
-        username: user.username,
         email: user.email,
         fullName: user.fullName,
       },
@@ -66,10 +61,8 @@ router.post("/register", async (req, res) => {
       token,
       user: {
         id: user._id,
-        username: user.username,
         email: user.email,
         fullName: user.fullName,
-        avatarUrl: user.avatarUrl,
       },
     });
   } catch (error) {
@@ -119,7 +112,6 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(
       {
         id: user._id,
-        username: user.username,
         email: user.email,
         fullName: user.fullName,
       },
@@ -135,10 +127,8 @@ router.post("/login", async (req, res) => {
       token,
       user: {
         id: user._id,
-        username: user.username,
         email: user.email,
         fullName: user.fullName,
-        avatarUrl: user.avatarUrl || "",
       },
     });
   } catch (error) {
@@ -174,4 +164,4 @@ router.get("/me", auth, async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;
