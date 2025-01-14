@@ -40,6 +40,13 @@ app.use(
 
 cloudinaryConnect();
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Server is up and running",
+  });
+});
+
 // Routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/events", eventRoutes);
