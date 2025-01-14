@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
@@ -57,8 +57,8 @@ const EditEventModal = ({ isOpen, onClose, eventDetails, onUpdate }) => {
       );
 
       if (response.data.success) {
-        onUpdate(response.data.event); // Update the event details in the parent component
-        onClose(); // Close the modal
+        onUpdate(response.data.event);
+        onClose();
       }
     } catch (error) {
       console.error("Error updating event:", error);

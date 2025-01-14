@@ -153,8 +153,7 @@ const Dashboard = () => {
       <CreateEventModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onSubmit={(formData) => {
-          console.log("Creating event with data:", formData);
+        onSubmit={() => {
           setIsCreateModalOpen(false);
         }}
       />

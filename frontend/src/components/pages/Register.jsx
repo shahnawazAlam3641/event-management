@@ -3,10 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../../store/slices/loadingSlice";
-import { addUser, login } from "../../store/slices/authSlice";
-// import { addUser } from "../redux/userSlice";
-// import ShowPassword from "./ShowPassword";
-// import { setLoading } from "../redux/loadingSlice";
+import { login } from "../../store/slices/authSlice";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -24,8 +21,6 @@ const Register = () => {
 
   const dispatch = useDispatch();
 
-  const { token } = useSelector((store) => store.auth);
-
   const handleFormSubmit = async (e) => {
     try {
       e.target.disabled = true;
@@ -36,12 +31,9 @@ const Register = () => {
           email: emailRef.current.value,
           password: passwordRef.current.value,
         });
-        // console.log(response.data);
 
         if (response.data.success) {
-          // console.log(response?.data?.token);
           localStorage.setItem("auth_token", response?.data?.token);
-          // console.log(response?.data?.token);
           dispatch(
             login({ user: response.data.user, token: response.data.token })
           );
@@ -56,10 +48,7 @@ const Register = () => {
           password: passwordRef.current.value,
         });
 
-        // console.log(response.data);
         if (response.data.success) {
-          // console.log(typeof response?.data?.token);
-          // console.log(response?.data?.token);
           localStorage.setItem("auth_token", response?.data?.token);
           dispatch(
             login({ user: response.data.user, token: response.data.token })

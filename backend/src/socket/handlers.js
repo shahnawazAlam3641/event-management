@@ -1,40 +1,6 @@
 const Event = require("../models/Event");
 
 const setupSocketHandlers = (io) => {
-  // io.on("connection", (socket) => {
-  //   console.log("A user connected");
-
-  //   socket.on("join-event", ({ eventId, userId }) => {
-  //     socket.join(eventId);
-
-  //     // Fetch the event and update attendees
-  //     Event.findById(eventId).then((event) => {
-  //       if (!event.attendees.some((attendee) => attendee.user.toString() === userId)) {
-  //         event.attendees.push({ user: userId });
-  //         event.save();
-  //       }
-  //     });
-
-  //     // Emit active users and user count
-  //     const activeUsers = Array.from(io.sockets.adapter.rooms.get(eventId) || []);
-  //     io.to(eventId).emit("user-joined", activeUsers.length);
-  //     io.to(eventId).emit("active-users", activeUsers);
-  //   });
-
-  //   socket.on("chat-message", (message) => {
-  //     io.to(message.eventId).emit("chat-message", message);
-  //   });
-
-  //   socket.on("leave-event", ({ eventId, userId }) => {
-  //     socket.leave(eventId);
-
-  //     // Emit updated user count
-  //     const activeUsers = Array.from(io.sockets.adapter.rooms.get(eventId) || []);
-  //     io.to(eventId).emit("user-joined", activeUsers.length);
-  //     io.to(eventId).emit("active-users", activeUsers);
-  //   });
-  // });
-
   const roomUsers = {};
 
   io.on("connection", (socket) => {

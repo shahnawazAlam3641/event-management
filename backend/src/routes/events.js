@@ -7,46 +7,6 @@ const { default: mongoose } = require("mongoose");
 
 const router = express.Router();
 
-// Upload Event Image
-router.post("/:id/upload", auth, async (req, res) => {
-  try {
-    if (!req.files || !req.files.image) {
-      return res
-        .status(400)
-        .json({ success: false, message: "No file uploaded" });
-    }
-
-    const file = req.files.image;
-    const result = await cloudinary.uploader.upload(file.tempFilePath, {
-      folder: "event_images",
-      public_id: `event_${req.params.id}`,
-      resource_type: "auto",
-    });
-
-    const event = await Event.findById(req.params.id);
-    if (!event) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Event not found" });
-    }
-
-    event.imageUrl = result.secure_url;
-    await event.save();
-
-    res.status(200).json({
-      success: true,
-      message: "Image uploaded successfully",
-      imageUrl: result.secure_url,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: "An error occurred while uploading the image",
-    });
-  }
-});
-
 // Create event
 router.post("/", auth, async (req, res) => {
   try {
@@ -118,46 +78,6 @@ router.post("/", auth, async (req, res) => {
 // Get all events
 router.get("/", async (req, res) => {
   try {
-    // const requestBodySchema = z.object({
-    //   location: z.string().min(3).max(50),
-    //   startDate: z.string().min(5).max(100),
-    //   endDate: z.string().min(5).max(100),
-    //   category: z.string().min(5).max(100),
-    // });
-
-    // const isparsedDataSuccess = requestBodySchema.safeParse(req.body);
-
-    // if (!isparsedDataSuccess.success) {
-    //   res.status(401).json({
-    //     success: false,
-    //     message: isparsedDataSuccess.error.issues[0].message,
-    //     error: isparsedDataSuccess.error,
-    //   });
-    //   return;
-    // }
-
-    // const { category, startDate, endDate, location } = req.query;
-    // const query = {};
-
-    // if (location) {
-    //   query.location = location;
-    // }
-
-    // if (category) {
-    //   query.category = category;
-    // }
-
-    // if (startDate || endDate) {
-    //   query.startDate = {};
-    //   if (startDate) query.startDate.$gte = new Date(startDate);
-    //   if (endDate) query.startDate.$lte = new Date(endDate);
-    // }
-
-    // const events = await Event.find(query)
-    //   .populate("createdBy", "username fullName")
-    //   .populate("attendees.user", "username fullName")
-    //   .sort({ startDate: 1 });
-
     const events = await Event.find({})
       .populate("createdBy")
       .select("-password");
@@ -220,8 +140,6 @@ router.put("/:id", auth, async (req, res) => {
       return;
     }
 
-    // console.log(mongoose.Types.ObjectId(req.params.id));
-
     const event = await Event.findById(req.params.id);
 
     if (!event) {
@@ -240,8 +158,6 @@ router.put("/:id", auth, async (req, res) => {
       });
     }
 
-    console.log(req.files);
-
     //  Check Uploaded File
     if (!req.files || !req.files.image) {
       return res
@@ -259,7 +175,7 @@ router.put("/:id", auth, async (req, res) => {
     }
 
     // Check file size (5MB max)
-    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;
     if (file.size > MAX_FILE_SIZE) {
       return res.status(400).json({
         success: false,
@@ -295,52 +211,10 @@ router.put("/:id", auth, async (req, res) => {
   }
 });
 
-// Delete event
-router.delete("/:id", auth, async (req, res) => {
-  try {
-    const event = await Event.findOneAndDelete({
-      _id: req.params.id,
-      createdBy: req.user.id,
-    });
-
-    if (!event) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Event not found" });
-    }
-
-    return res.json({ success: true, message: "Event deleted" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-});
-
-router.get("/:id/attendees", auth, async (req, res) => {
-  try {
-    const event = await Event.findById(req.params.id);
-
-    if (!event) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Event not found" });
-    }
-
-    res.json({ success: true, attendees: event.attendees.length });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-});
-
-// Update attendance status - join event
-// Update attendance status - join event
 router.post("/:id/attend", auth, async (req, res) => {
   try {
     const eventId = req.params.id;
     const userId = req.user.id;
-
-    console.log("Event ID:", eventId);
-    console.log("User ID:", userId);
 
     // Find the event
     const event = await Event.findById(eventId);
@@ -357,7 +231,6 @@ router.post("/:id/attend", auth, async (req, res) => {
     );
 
     if (isAlreadyAttendee) {
-      console.log("User already joined");
       return res.json({
         success: true,
         message: "User already joined the event",
@@ -369,7 +242,6 @@ router.post("/:id/attend", auth, async (req, res) => {
     event.attendees.push({ user: userId });
     await event.save();
 
-    console.log("User successfully joined");
     return res.json({
       success: true,
       message: "User successfully joined the event",

@@ -39,18 +39,12 @@ const CreateEventModal = ({ isOpen, onClose, onSubmit }) => {
           },
         }
       );
-      //   console.log(formData);
 
-      console.log(response);
       onClose();
     } catch (error) {
       console.error(error);
       setError(error?.response?.data?.message);
     }
-    // if (onSubmit) {
-    //   onSubmit(formData);
-    // }
-    // Close modal after submission
   };
 
   if (!isOpen) return null;

@@ -11,8 +11,6 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth);
 
-  // console.log(token);
-
   const handleLogout = () => {
     dispatch(logout());
     navigate("/register");
@@ -38,7 +36,6 @@ const Navbar = () => {
 
   useEffect(() => {
     if (!user && token) {
-      // console.log("fetchuser called");
       fetchUserDetails();
     }
   }, [token]);

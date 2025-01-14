@@ -10,9 +10,7 @@ const EventCard = ({
   startDate,
   endDate,
   imageUrl,
-  onJoin,
 }) => {
-  // console.log(id);
   const navigate = useNavigate();
   return (
     <div

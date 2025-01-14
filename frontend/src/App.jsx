@@ -4,16 +4,24 @@ import Navbar from "./components/core/Navbar";
 import Home from "./components/pages/Home";
 import Register from "./components/pages/Register";
 import Dashboard from "./components/pages/Dashboard";
-import EventDetails from "./components/pages/EventDetails";
 import EventPage from "./components/pages/EventPage";
 import AuthenticatedRoute from "./components/common/AuthenticatedRoute";
+import UnauthenticatedRoute from "./components/common/UnauthenticatedRoute";
 
 function App() {
   return (
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={
+            <UnauthenticatedRoute>
+              {" "}
+              <Home />
+            </UnauthenticatedRoute>
+          }
+        />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route
